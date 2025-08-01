@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Dscheduler</string>
+
+    <string-array name="genres">
+        <item>공부</item>
+        <item>일</item>
+        <item>운동</item>
+        <item>휴식</item>
+        <item>기타</item>
+    </string-array>
+</resources>
