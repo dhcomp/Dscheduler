@@ -78,6 +78,11 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, RecordActivity::class.java)
             recordLauncher.launch(intent)
         }
+
+        findViewById<Button>(R.id.btnStats).setOnClickListener {
+            val intent = Intent(this, StatsActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun updateMonthTitle(yearMonth: YearMonth) {

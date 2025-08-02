@@ -16,15 +16,16 @@ class RecordActivity : AppCompatActivity() {
 
     private lateinit var titleEditText: EditText
     private lateinit var genreSpinner: Spinner
+    private lateinit var startDateBtn: Button
+    private lateinit var endDateBtn: Button
     private lateinit var startTimeBtn: Button
     private lateinit var endTimeBtn: Button
     private lateinit var saveBtn: Button
 
-    private var startTime: Long = 0
-    private var endTime: Long = 0
-
-    private val startCalendar: Calendar = Calendar.getInstance()
-    private val endCalendar: Calendar = Calendar.getInstance()
+    private var startDate: Calendar = Calendar.getInstance()
+    private var endDate: Calendar = Calendar.getInstance()
+    private var startTime: Calendar = Calendar.getInstance()
+    private var endTime: Calendar = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +33,8 @@ class RecordActivity : AppCompatActivity() {
 
         titleEditText = findViewById(R.id.editTitle)
         genreSpinner = findViewById(R.id.spinnerGenre)
+        startDateBtn = findViewById(R.id.btnStartDate)
+        endDateBtn = findViewById(R.id.btnEndDate)
         startTimeBtn = findViewById(R.id.btnStartTime)
         endTimeBtn = findViewById(R.id.btnEndTime)
         saveBtn = findViewById(R.id.btnSave)
@@ -44,62 +47,86 @@ class RecordActivity : AppCompatActivity() {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
 
-        startTimeBtn.setOnClickListener { showDateTimePicker(true) }
-        endTimeBtn.setOnClickListener { showDateTimePicker(false) }
+        // 날짜 선택 버튼 설정
+        startDateBtn.setOnClickListener { showDatePicker(true) }
+        endDateBtn.setOnClickListener { showDatePicker(false) }
+
+        // 시간 선택 버튼 설정
+        startTimeBtn.setOnClickListener { showTimePicker(true) }
+        endTimeBtn.setOnClickListener { showTimePicker(false) }
 
         saveBtn.setOnClickListener {
             val title = titleEditText.text.toString()
             val genre = genreSpinner.selectedItem.toString()
 
-            if (title.isBlank() || startTime == 0L || endTime == 0L) {
-                Toast.makeText(this, "모든 항목을 입력하세요.", Toast.LENGTH_SHORT).show()
+            if (title.isBlank()) {
+                Toast.makeText(this, "활동 제목을 입력하세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
+            }
+
+            // 시작 시간과 종료 시간을 결합
+            val startDateTime = Calendar.getInstance().apply {
+                set(startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH), startDate.get(Calendar.DAY_OF_MONTH))
+                set(Calendar.HOUR_OF_DAY, startTime.get(Calendar.HOUR_OF_DAY))
+                set(Calendar.MINUTE, startTime.get(Calendar.MINUTE))
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+
+            val endDateTime = Calendar.getInstance().apply {
+                set(endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH), endDate.get(Calendar.DAY_OF_MONTH))
+                set(Calendar.HOUR_OF_DAY, endTime.get(Calendar.HOUR_OF_DAY))
+                set(Calendar.MINUTE, endTime.get(Calendar.MINUTE))
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
             }
 
             val record = ActivityRecord(
                 title = title,
                 genre = genre,
-                startTime = startTime,
-                endTime = endTime
+                startTime = startDateTime.timeInMillis,
+                endTime = endDateTime.timeInMillis
             )
 
             lifecycleScope.launch {
                 AppDatabase.getDatabase(applicationContext).activityRecordDao().insert(record)
-                setResult(RESULT_OK) // ✅ MainActivity로 성공 결과 전달
+                setResult(RESULT_OK)
                 finish()
             }
         }
     }
 
-    private fun showDateTimePicker(isStart: Boolean) {
+    private fun showDatePicker(isStart: Boolean) {
         val calendar = Calendar.getInstance()
-
+        
         DatePickerDialog(this, { _, year, month, day ->
-            calendar.set(Calendar.YEAR, year)
-            calendar.set(Calendar.MONTH, month)
-            calendar.set(Calendar.DAY_OF_MONTH, day)
-
-            TimePickerDialog(this, { _, hour, minute ->
-                calendar.set(Calendar.HOUR_OF_DAY, hour)
-                calendar.set(Calendar.MINUTE, minute)
-                calendar.set(Calendar.SECOND, 0)
-                calendar.set(Calendar.MILLISECOND, 0)
-
-                val timeMillis = calendar.timeInMillis
-                val formatted = "%04d-%02d-%02d %02d:%02d".format(year, month + 1, day, hour, minute)
-
-                if (isStart) {
-                    startCalendar.timeInMillis = timeMillis
-                    startTime = timeMillis
-                    startTimeBtn.text = "시작: $formatted"
-                } else {
-                    endCalendar.timeInMillis = timeMillis
-                    endTime = timeMillis
-                    endTimeBtn.text = "종료: $formatted"
-                }
-
-            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()
-
+            if (isStart) {
+                startDate.set(Calendar.YEAR, year)
+                startDate.set(Calendar.MONTH, month)
+                startDate.set(Calendar.DAY_OF_MONTH, day)
+                startDateBtn.text = "시작: ${year}-${month + 1}-${day}"
+            } else {
+                endDate.set(Calendar.YEAR, year)
+                endDate.set(Calendar.MONTH, month)
+                endDate.set(Calendar.DAY_OF_MONTH, day)
+                endDateBtn.text = "종료: ${year}-${month + 1}-${day}"
+            }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
+    }
+
+    private fun showTimePicker(isStart: Boolean) {
+        val calendar = Calendar.getInstance()
+        
+        TimePickerDialog(this, { _, hour, minute ->
+            if (isStart) {
+                startTime.set(Calendar.HOUR_OF_DAY, hour)
+                startTime.set(Calendar.MINUTE, minute)
+                startTimeBtn.text = "시작: ${String.format("%02d:%02d", hour, minute)}"
+            } else {
+                endTime.set(Calendar.HOUR_OF_DAY, hour)
+                endTime.set(Calendar.MINUTE, minute)
+                endTimeBtn.text = "종료: ${String.format("%02d:%02d", hour, minute)}"
+            }
+        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()
     }
 }

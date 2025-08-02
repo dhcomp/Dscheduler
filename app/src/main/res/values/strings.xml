@@ -8,4 +8,10 @@
         <item>휴식</item>
         <item>기타</item>
     </string-array>
+
+    <string-array name="periods">
+        <item>이번 주</item>
+        <item>이번 달</item>
+        <item>이번 년</item>
+    </string-array>
 </resources>

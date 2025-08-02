@@ -4,6 +4,7 @@
     android:padding="24dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <EditText
         android:id="@+id/editTitle"
         android:hint="활동 제목"
@@ -14,28 +15,80 @@
         android:id="@+id/spinnerGenre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="16dp"/>
 
-    <Button
-        android:id="@+id/btnStartTime"
-        android:text="시작 시간 선택"
+    <!-- 날짜 선택 섹션 -->
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"/>
+        android:text="날짜 선택"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"/>
 
-    <Button
-        android:id="@+id/btnEndTime"
-        android:text="종료 시간 선택"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"/>
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnStartDate"
+            android:text="시작 날짜"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"/>
+
+        <Button
+            android:id="@+id/btnEndDate"
+            android:text="종료 날짜"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"/>
+
+    </LinearLayout>
+
+    <!-- 시간 선택 섹션 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="시간 선택"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnStartTime"
+            android:text="시작 시간"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"/>
+
+        <Button
+            android:id="@+id/btnEndTime"
+            android:text="종료 시간"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"/>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/btnSave"
         android:text="저장"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="24dp"/>
 
 </LinearLayout>
 

@@ -29,6 +29,12 @@
             android:name=".ui.record.RecordActivity"
             android:exported="false"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" /> <!-- ✅ 수정됨 -->
+
+        <!-- 통계 화면 -->
+        <activity
+            android:name=".ui.record.StatsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
     </application>
 
 </manifest>

@@ -6,13 +6,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 기록 추가 버튼 -->
-    <Button
-        android:id="@+id/btnAddRecord"
-        android:text="새 일정 추가"
+    <!-- 버튼 행 -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"/>
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <Button
+            android:id="@+id/btnAddRecord"
+            android:text="새 일정 추가"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"/>
+
+        <Button
+            android:id="@+id/btnStats"
+            android:text="통계 보기"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"/>
+
+    </LinearLayout>
 
     <!-- ✅ 현재 월 표시 텍스트 -->
     <TextView
